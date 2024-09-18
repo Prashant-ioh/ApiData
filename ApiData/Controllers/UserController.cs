@@ -1,5 +1,7 @@
-﻿using ApiData.Models;
+﻿using ApiData.Data;
+using ApiData.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
 namespace ApiData.Controllers
@@ -10,35 +12,47 @@ namespace ApiData.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly AppDbContext _configuration;
 
-        public UserController(IConfiguration configuration)
+        public UserController(AppDbContext context)
         {
-            _configuration = configuration;
+            _configuration = context;
         }
 
 
         [HttpPost]
-        public IActionResult InsertUser(User user)
+        public async Task<ActionResult<User>> PostProduct(User product)
         {
-            string query = @"INSERT INTO users (Name, Email) VALUES (@Name, @Email)";
-            string sqlDataSource = _configuration.GetConnectionString("dbConn");
+            _configuration.Users.Add(product);
+            await _configuration.SaveChangesAsync();
 
-            using (MySqlConnection myCon = new MySqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (MySqlCommand myCommand = new MySqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@Name", user.Name);
-                    myCommand.Parameters.AddWithValue("@Email", user.Email);
-
-                    myCommand.ExecuteNonQuery();
-                    myCon.Close();
-                }
-            }
-
-            return Ok(new { message = "User inserted successfully!" });
+            return CreatedAtAction(nameof(PostProduct), new { id = product.Id }, product);
         }
-   
+
+
+
+
+        //[HttpPost]
+        //public IActionResult InsertUser(User user)
+        //{
+        //    string query = @"INSERT INTO users (Name, Email) VALUES (@Name, @Email)";
+        //    string sqlDataSource = _configuration.GetConnectionString("dbconn");
+
+        //    using (MySqlConnection myCon = new MySqlConnection(sqlDataSource))
+        //    {
+        //        myCon.Open();
+        //        using (MySqlCommand myCommand = new MySqlCommand(query, myCon))
+        //        {
+        //            myCommand.Parameters.AddWithValue("@Name", user.Name);
+        //            myCommand.Parameters.AddWithValue("@Email", user.Email);
+
+        //            myCommand.ExecuteNonQuery();
+        //            myCon.Close();
+        //        }
+        //    }
+
+        //    return Ok(new { message = "User inserted successfully!" });
+        //}
+
     }
 }
