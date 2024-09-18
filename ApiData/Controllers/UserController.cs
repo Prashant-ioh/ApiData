@@ -21,38 +21,12 @@ namespace ApiData.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostProduct(User product)
+        public async Task<ActionResult<User>> PostProduct(User user)
         {
-            _configuration.Users.Add(product);
+            _configuration.Users.Add(user);
             await _configuration.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostProduct), new { id = product.Id }, product);
+            return CreatedAtAction(nameof(PostProduct), new { id = user.Id }, user);
         }
-
-
-
-
-        //[HttpPost]
-        //public IActionResult InsertUser(User user)
-        //{
-        //    string query = @"INSERT INTO users (Name, Email) VALUES (@Name, @Email)";
-        //    string sqlDataSource = _configuration.GetConnectionString("dbconn");
-
-        //    using (MySqlConnection myCon = new MySqlConnection(sqlDataSource))
-        //    {
-        //        myCon.Open();
-        //        using (MySqlCommand myCommand = new MySqlCommand(query, myCon))
-        //        {
-        //            myCommand.Parameters.AddWithValue("@Name", user.Name);
-        //            myCommand.Parameters.AddWithValue("@Email", user.Email);
-
-        //            myCommand.ExecuteNonQuery();
-        //            myCon.Close();
-        //        }
-        //    }
-
-        //    return Ok(new { message = "User inserted successfully!" });
-        //}
-
     }
 }
