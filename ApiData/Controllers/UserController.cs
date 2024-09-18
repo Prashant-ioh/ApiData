@@ -26,7 +26,7 @@ namespace ApiData.Controllers
             _configuration.Users.Add(user);
             await _configuration.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(PostProduct), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(PostProduct), new { id = user.Id }, user);           
         }
     }
 }
