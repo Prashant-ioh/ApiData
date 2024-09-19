@@ -9,7 +9,8 @@
         public string VehNum { get; set; }
         public int Fare { get; set; }
         public int PenaltyFare { get; set; }
-
+        public DateTime ExpiryDateTime { get; set; }
+            
     }
 }
 
